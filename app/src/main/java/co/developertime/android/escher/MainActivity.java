@@ -31,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Properties
     private float mScreenDensity;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationListener mLocationListener;
+    private LocationMaster mLocationMaster;
 
     // Activity lifecycle
     @Override
@@ -58,32 +57,13 @@ public class MainActivity extends AppCompatActivity {
         int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         Log.i(TAG, "errorCode: " + errorCode);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(Bundle bundle) {
-                        Log.i(TAG, "onConnected");
-                        getLocation();
-                    }
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        Log.i(TAG, "onConnectionSuspended " + i);
-                    }
-                })
-                .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult connectionResult) {
-                        Log.i(TAG, "onConnectionFailed " + connectionResult);
-                    }
-                })
-                .build();
+        mLocationMaster = new LocationMaster(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        mLocationMaster.startLocationUpdates();
     }
     @Override
     protected void onResume() {super.onResume();}
@@ -92,42 +72,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
-        mGoogleApiClient.disconnect();
+        mLocationMaster.stopLocationUpdates();
     }
     @Override
     protected void onDestroy() {super.onDestroy();}
-
-    private void getLocation() {
-        LocationRequest request = LocationRequest.create();
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //request.setNumUpdates(1);
-        request.setInterval(0);
-
-        if (false) {
-            mLocationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    Log.i(TAG, "location recorded: " + location);
-                    Log.i(TAG, "location.getAccuracy() -> " + location.getAccuracy());
-                    Log.i(TAG, "location.getAltitude() -> " + location.getAltitude());
-                    Log.i(TAG, "location.getBearing() -> " + location.getBearing());
-                    Log.i(TAG, "location.getElapsedRealtimeNanos() -> " + location.getElapsedRealtimeNanos());
-                    Log.i(TAG, "location.getExtras() -> " + location.getExtras());
-                    Log.i(TAG, "location.getLatitude() -> " + location.getLatitude());
-                    Log.i(TAG, "location.getLongitude() -> " + location.getLongitude());
-                    Log.i(TAG, "location.getProvider() -> " + location.getProvider());
-                    Log.i(TAG, "location.getSpeed() -> " + location.getSpeed());
-                    Log.i(TAG, "location.getTime() -> " + location.getTime());
-                    Log.i(TAG, "location.hasAccuracy() -> " + location.hasAccuracy());
-                    Log.i(TAG, "location.hasAltitude() -> " + location.hasAltitude());
-                    Log.i(TAG, "location.hasBearing() -> " + location.hasBearing());
-                    Log.i(TAG, "location.hasSpeed() -> " + location.hasSpeed());
-                    Log.i(TAG, "location.isFromMockProvider() -> " + location.isFromMockProvider());
-                }
-            };
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, request, mLocationListener);
-        }
-    }
 }

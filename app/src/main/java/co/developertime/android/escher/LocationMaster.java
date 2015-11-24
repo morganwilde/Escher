@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices;
 public class LocationMaster {
     public static final String TAG = "LocationMaster";
     // Properties
+    private boolean mShouldStartLocationUpdates = false;
     private GoogleApiClient mGoogleApiClient;
     private LocationListener mLocationListener;
     private LocationRequest mLocationRequest;
@@ -28,11 +29,15 @@ public class LocationMaster {
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(Bundle bundle) {
-
+                        if (mShouldStartLocationUpdates) {
+                            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
+                        }
                     }
                     @Override
                     public void onConnectionSuspended(int i) {
-
+                        if (!mShouldStartLocationUpdates) {
+                            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+                        }
                     }
                 })
                 .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
@@ -57,10 +62,13 @@ public class LocationMaster {
 
     // Methods
     public void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, mLocationListener);
+        mShouldStartLocationUpdates = true;
+        mGoogleApiClient.connect();
+
     }
     public void stopLocationUpdates() {
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, mLocationListener);
+        mShouldStartLocationUpdates = false;
+        mGoogleApiClient.disconnect();
     }
 
     public void logLocation(Location location) {
