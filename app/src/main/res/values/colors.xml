@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3498db</color>
     <color name="colorPrimaryDark">#2980b9</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorPositive">#2ecc71</color> <!-- Emerald -->
+    <color name="colorNegative">#e74c3c</color> <!-- Nephritis -->
+    <color name="colorLightForeground">#ecf0f1</color> <!-- Clouds -->
 </resources>

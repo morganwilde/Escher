@@ -16,13 +16,28 @@ import com.google.android.gms.location.LocationServices;
  */
 public class LocationMaster {
     public static final String TAG = "LocationMaster";
+
     // Properties
     private boolean mShouldStartLocationUpdates = false;
+    private boolean mHasStartedLocationUpdates = false;
+    public boolean willBecomeActive() {return mShouldStartLocationUpdates;}
+    public boolean hasBecomeActive() {return mHasStartedLocationUpdates;}
+
     private GoogleApiClient mGoogleApiClient;
     private LocationListener mLocationListener;
     private LocationRequest mLocationRequest;
 
-    public LocationMaster(Context context) {
+    private static LocationMaster mInstance;
+    public static LocationMaster getLocationMaster(Context context) {
+        if (mInstance == null) {
+            mInstance = new LocationMaster(context);
+        }
+        return mInstance;
+    }
+
+    private Location mLastRecordedLocation;
+
+    private LocationMaster(Context context) {
         // Create the Google API client
         mGoogleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API)
@@ -51,6 +66,8 @@ public class LocationMaster {
         mLocationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                mHasStartedLocationUpdates = true;
+                mLastRecordedLocation = location;
                 logLocation(location);
             }
         };
@@ -67,6 +84,7 @@ public class LocationMaster {
 
     }
     public void stopLocationUpdates() {
+        mHasStartedLocationUpdates = false;
         mShouldStartLocationUpdates = false;
         mGoogleApiClient.disconnect();
     }
