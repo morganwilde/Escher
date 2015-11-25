@@ -23,7 +23,7 @@ public class MainNavigationFragment extends Fragment {
     public static int NAVIGATION_BUTTON_COLOR_OFF = R.color.colorLightForeground;
     public static int NAVIGATION_BUTTON_TEXT_COLOR_ON = R.color.colorLightForeground;
     public static int NAVIGATION_BUTTON_TEXT_COLOR_OFF = R.color.colorDarkForeground;
-    public static String INITIAL_FRAGMENT_NAME = "Analysis";
+    public static String INITIAL_FRAGMENT_NAME = "Settings";
 
     // Interface
     public interface OnChangeListener {

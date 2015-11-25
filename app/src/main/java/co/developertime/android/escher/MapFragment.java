@@ -47,7 +47,7 @@ public class MapFragment extends Fragment implements View.OnTouchListener, Locat
         mMapCanvasContainerView.setOnTouchListener(this);
 
         LocationMaster.getLocationMaster(getActivity()).addListenerForAccuracyChanges(this);
-        LocationMaster.getLocationMaster(getActivity()).startLocationUpdates();
+//        LocationMaster.getLocationMaster(getActivity()).startLocationUpdates();
 
         return view;
     }
@@ -102,10 +102,10 @@ public class MapFragment extends Fragment implements View.OnTouchListener, Locat
                     topLatitude,
                     bottomLatitude
             );
-            Log.i(TAG, "leftLongitude: " + leftLongitude);
-            Log.i(TAG, "rightLongitude: " + rightLongitude);
-            Log.i(TAG, "topLatitude: " + topLatitude);
-            Log.i(TAG, "bottomLatitude: " + bottomLatitude);
+//            Log.i(TAG, "leftLongitude: " + leftLongitude);
+//            Log.i(TAG, "rightLongitude: " + rightLongitude);
+//            Log.i(TAG, "topLatitude: " + topLatitude);
+//            Log.i(TAG, "bottomLatitude: " + bottomLatitude);
         }
     }
     public void onAccuracyChangedToGood() {}
