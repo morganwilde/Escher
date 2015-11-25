@@ -7,4 +7,5 @@
     <color name="colorNegative">#e74c3c</color> <!-- Nephritis -->
     <color name="colorLightForeground">#ecf0f1</color> <!-- Clouds -->
     <color name="colorDarkerForeground">#bdc3c7</color> <!-- Silver -->
+    <color name="colorDarkForeground">#2c3e50</color> <!-- Midnight Blue -->
 </resources>

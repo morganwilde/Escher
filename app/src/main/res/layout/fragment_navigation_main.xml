@@ -5,6 +5,7 @@
               android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/navigation_button_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_gear_icon"
@@ -13,12 +14,14 @@
         android:backgroundTint="@color/colorPrimary"
         android:textColor="@color/colorLightForeground"/>
     <Button
+        android:id="@+id/navigation_button_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_map_icon"
         android:text="Map"
         android:layout_weight="1"/>
     <Button
+        android:id="@+id/navigation_button_analysis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/ic_chart_icon"

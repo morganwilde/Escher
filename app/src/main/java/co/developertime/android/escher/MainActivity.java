@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toolbar;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements MainNavigationFragment.OnChangeListener {
     // Statics
     public static final String TAG = "MainActivity";
     private static final int TOOLBAR_PADDING_LEFT = 10;
@@ -32,14 +32,10 @@ public class MainActivity extends Activity {
 
         FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-        Fragment fragmentNavigationMain = fragmentManager.findFragmentById(R.id.fragment_navigation_container);
+        MainNavigationFragment fragmentNavigationMain = (MainNavigationFragment) fragmentManager.findFragmentById(R.id.fragment_navigation_container);
 
         if (fragment == null) {
-            fragment = new MainFragment();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.fragment_container, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            onFragmentSelection(fragmentNavigationMain.INITIAL_FRAGMENT_NAME);
         }
         if (fragmentNavigationMain == null) {
             fragmentNavigationMain = new MainNavigationFragment();
@@ -53,17 +49,6 @@ public class MainActivity extends Activity {
         toolbar.setTitle("Escher");
         toolbar.setContentInsetsAbsolute((int) (TOOLBAR_PADDING_LEFT * mScreenDensity), 0);
         setActionBar(toolbar); // This creates a copy and gets rid of the original Toolbar instance
-//
-//        // Create the map's canvas
-//        mMapCanvasViewContainer = (RelativeLayout) findViewById(R.id.map_canvas_container);
-//        mMapCanvasView = new MapCanvasView(this);
-//        mMapCanvasViewContainer.addView(mMapCanvasView);
-//
-//        // Google Play services
-//        int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-//        Log.i(TAG, "errorCode: " + errorCode);
-//
-//        mLocationMaster = new LocationMaster(this);
     }
 
     @Override
@@ -76,4 +61,19 @@ public class MainActivity extends Activity {
     protected void onStop() {super.onStop();}
     @Override
     protected void onDestroy() {super.onDestroy();}
+
+    // Navigation listener
+    public void onFragmentSelection(String name) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, createFragmentWithName(name));
+        transaction.commit();
+    }
+    public Fragment createFragmentWithName(String name) {
+        switch (name) {
+            case "Settings": return new SettingsFragment();
+            case "Map": return new MapFragment();
+            case "Analysis": return new AnalysisFragment();
+            default: return null;
+        }
+    }
 }
