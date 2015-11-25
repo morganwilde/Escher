@@ -6,4 +6,5 @@
     <color name="colorPositive">#2ecc71</color> <!-- Emerald -->
     <color name="colorNegative">#e74c3c</color> <!-- Nephritis -->
     <color name="colorLightForeground">#ecf0f1</color> <!-- Clouds -->
+    <color name="colorDarkerForeground">#bdc3c7</color> <!-- Silver -->
 </resources>
