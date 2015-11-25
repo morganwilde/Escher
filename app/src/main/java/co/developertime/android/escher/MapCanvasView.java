@@ -25,6 +25,8 @@ public class MapCanvasView extends View {
     private Rect mCanvasBounds;
     private MapCellGrid mMapCellGrid;
 
+    public Rect getCanvasBounds() {return mCanvasBounds;}
+
     // Drawables
     private DrawableShapeStack mDrawableShapeStack = new DrawableShapeStack();
     private ShapeDrawable mBackgroundShape;
@@ -45,7 +47,10 @@ public class MapCanvasView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mCanvasBounds = new Rect(0, 0, w, h);
-        mMapCellGrid = new MapCellGrid(0, 0, w, h);
+        mMapCellGrid = new MapCellGrid(
+                0, 0, w, h,
+                0, 0, 0, 0
+        );
         createBackgroundShape();
     }
 
@@ -108,8 +113,18 @@ public class MapCanvasView extends View {
         mMapCellGrid.updateOrigin(originX, originY);
         invalidate();
     }
+
     public void saveGridOrigin(int originX, int originY) {
         mMapCellGrid.saveOrigin(originX, originY);
+        invalidate();
+    }
+
+    // GPS
+    public void updateGridLongitudeAndLatitude(double leftLongitude, double rightLongitude, double topLatitude, double bottomLatitude) {
+        mMapCellGrid = new MapCellGrid(
+                0, 0, mMapCellGrid.getWidthPixels(), mMapCellGrid.getHeightPixels(),
+                leftLongitude, rightLongitude, topLatitude, bottomLatitude
+        );
         invalidate();
     }
 }

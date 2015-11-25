@@ -36,8 +36,10 @@ public class LocationMaster {
     // Properties
     private boolean mShouldStartLocationUpdates = false;
     private boolean mHasStartedLocationUpdates = false;
+    private boolean mHasStartedAccurateLocationUpdates = false;
     public boolean willBecomeActive() {return mShouldStartLocationUpdates;}
     public boolean hasBecomeActive() {return mHasStartedLocationUpdates;}
+    public boolean hasStartedAccurateLocationUpdates() {return mHasStartedAccurateLocationUpdates;}
 
     private GoogleApiClient mGoogleApiClient;
     private LocationListener mLocationListener;
@@ -52,6 +54,7 @@ public class LocationMaster {
     }
 
     private Location mLastRecordedLocation;
+    public Location getLastRecordedLocation() {return mLastRecordedLocation;}
 
     private LocationMaster(Context context) {
         // Create the Google API client
@@ -88,9 +91,12 @@ public class LocationMaster {
                     accuracyChangeListener.onAccuracyChanged(location.getAccuracy());
                     if (location.getAccuracy() <= 10) {
                         accuracyChangeListener.onAccuracyChangedToGood();
+                        if (!mHasStartedAccurateLocationUpdates) {
+                            mHasStartedAccurateLocationUpdates = true;
+                        }
                     }
                 }
-                logLocation(location);
+//                logLocation(location);
             }
         };
         // Create the location request
@@ -106,6 +112,7 @@ public class LocationMaster {
 
     }
     public void stopLocationUpdates() {
+        mHasStartedAccurateLocationUpdates = false;
         mHasStartedLocationUpdates = false;
         mShouldStartLocationUpdates = false;
         mGoogleApiClient.disconnect();

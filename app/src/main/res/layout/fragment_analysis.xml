@@ -4,9 +4,46 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Analysis"/>
+    <TableLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="1"
+        android:layout_margin="5dp">
+        <!-- Time Spent -->
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="Time Spent" android:textSize="20dp" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="Commuting" android:paddingLeft="10dp" android:textStyle="bold" />
+            <TextView android:text="0 minutes" android:padding="10dp" android:gravity="left" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="Exploring" android:paddingLeft="10dp" android:textStyle="bold" />
+            <TextView android:text="0 minutes" android:padding="10dp" android:gravity="left" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="At home" android:paddingLeft="10dp" android:textStyle="bold" />
+            <TextView android:text="0 minutes" android:padding="10dp" android:gravity="left" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="At work" android:paddingLeft="10dp" android:textStyle="bold" />
+            <TextView android:text="0 minutes" android:padding="10dp" android:gravity="left" />
+        </TableRow>
+        <!-- Environments Explored -->
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="Environments explored" android:textSize="20dp" android:paddingTop="20dp" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="None" android:padding="10dp" android:textStyle="italic" />
+        </TableRow>
+        <!-- Modes of transportation -->
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="Modes of Transportation" android:textSize="20dp" android:paddingTop="20dp" />
+        </TableRow>
+        <TableRow android:layout_width="match_parent">
+            <TextView android:text="None" android:padding="10dp" android:textStyle="italic" />
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

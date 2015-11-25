@@ -25,12 +25,28 @@ public class MapCellGrid {
     private int mOriginY;
     private int mWidthPixels;
     private int mHeightPixels;
+    // GPS
+    private double mLeftLongitude;
+    private double mRightLongitude;
+    private double mTopAltitude;
+    private double mBottomAltitude;
 
-    public MapCellGrid(int originX, int originY, int widthPixels, int heightPixels) {
+    public int getWidthPixels() {return mWidthPixels;}
+    public int getHeightPixels() {return mHeightPixels;}
+
+    public MapCellGrid(
+            int originX, int originY, int widthPixels, int heightPixels,
+            double leftLongitude, double rightLongitude, double topAltitude, double bottomAltitude)
+    {
         mOriginX = originX;
         mOriginY = originY;
         mWidthPixels = widthPixels;
         mHeightPixels = heightPixels;
+        // GPS
+        mLeftLongitude = leftLongitude;
+        mRightLongitude = rightLongitude;
+        mTopAltitude = topAltitude;
+        mBottomAltitude = bottomAltitude;
 
         int gridSideLengthInCells = (int) Math.round(Math.sqrt(CELL_COUNT));
         int cellWidthPixels = mWidthPixels / gridSideLengthInCells;
