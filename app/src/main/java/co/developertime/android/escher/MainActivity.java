@@ -10,10 +10,13 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 import android.widget.RelativeLayout;
 
-public class MainActivity extends Activity implements MainNavigationFragment.OnChangeListener {
+public class MainActivity extends Activity implements MainNavigationFragment.OnChangeListener, MainNavigationFragment.Delegate {
     // Statics
     public static final String TAG = "MainActivity";
     private static final int TOOLBAR_PADDING_LEFT = 10;
+
+    // Fragments
+    private MainNavigationFragment mMainNavigationFragment;
 
     // Views
     private RelativeLayout mMapCanvasViewContainer;
@@ -33,15 +36,15 @@ public class MainActivity extends Activity implements MainNavigationFragment.OnC
 
         FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-        MainNavigationFragment fragmentNavigationMain = (MainNavigationFragment) fragmentManager.findFragmentById(R.id.fragment_navigation_container);
+        mMainNavigationFragment = (MainNavigationFragment) fragmentManager.findFragmentById(R.id.fragment_navigation_container);
 
         if (fragment == null) {
-            onFragmentSelection(fragmentNavigationMain.INITIAL_FRAGMENT_NAME);
+            onFragmentSelection(mMainNavigationFragment.INITIAL_FRAGMENT_NAME);
         }
-        if (fragmentNavigationMain == null) {
-            fragmentNavigationMain = new MainNavigationFragment();
+        if (mMainNavigationFragment == null) {
+            mMainNavigationFragment = new MainNavigationFragment();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.fragment_navigation_container, fragmentNavigationMain);
+            transaction.add(R.id.fragment_navigation_container, mMainNavigationFragment);
             transaction.commit();
         }
 
@@ -76,5 +79,11 @@ public class MainActivity extends Activity implements MainNavigationFragment.OnC
             case "Analysis": return new AnalysisFragment();
             default: return null;
         }
+    }
+
+    // Navigation delegate
+    public void navigateToFragmentWithName(String name) {
+        mMainNavigationFragment.enableNavigationButtonWithName(name);
+        Log.i(TAG, name);
     }
 }

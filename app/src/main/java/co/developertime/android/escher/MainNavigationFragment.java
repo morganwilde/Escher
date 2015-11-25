@@ -29,6 +29,9 @@ public class MainNavigationFragment extends Fragment {
     public interface OnChangeListener {
         public void onFragmentSelection(String name);
     }
+    public interface Delegate {
+        public void navigateToFragmentWithName(String name);
+    }
 
     private View.OnClickListener mOnNavigationButtonClickListener;
 
@@ -84,6 +87,9 @@ public class MainNavigationFragment extends Fragment {
                 ((OnChangeListener) getActivity()).onFragmentSelection(name);
             }
         }
+    }
+    public void enableNavigationButtonWithName(String name) {
+        onNavigationButtonClick(mNavigationButtonReferences.get(name));
     }
 
     // Navigation button toggles

@@ -29,6 +29,9 @@ public class LocationMaster {
     public void addListenerForAccuracyChanges(OnAccuracyChangeListener listener) {
         mOnAccuracyChangeListeners.add(listener);
     }
+    public void removeListenerForAccuracyChanges(OnAccuracyChangeListener listener) {
+        mOnAccuracyChangeListeners.remove(listener);
+    }
 
     // Properties
     private boolean mShouldStartLocationUpdates = false;

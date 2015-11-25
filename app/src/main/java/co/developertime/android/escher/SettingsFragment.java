@@ -23,6 +23,7 @@ public class SettingsFragment extends Fragment implements LocationMaster.OnAccur
 
     // Properties
     private LocationMaster mLocationMaster;
+    private static boolean mInitialLaunch = true;
     // Views
     private Button mLocationTrackingToggleButton;
     private TextView mWaitingForAccuracyTextView;
@@ -32,7 +33,6 @@ public class SettingsFragment extends Fragment implements LocationMaster.OnAccur
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocationMaster = LocationMaster.getLocationMaster(getActivity());
-        mLocationMaster.addListenerForAccuracyChanges(this);
     }
     @Nullable
     @Override
@@ -63,9 +63,16 @@ public class SettingsFragment extends Fragment implements LocationMaster.OnAccur
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mLocationMaster.addListenerForAccuracyChanges(this);
+    }
     @Override
     public void onPause() {
         super.onPause();
+        mLocationMaster.removeListenerForAccuracyChanges(this);
     }
 
     // Fragment setup
@@ -108,5 +115,9 @@ public class SettingsFragment extends Fragment implements LocationMaster.OnAccur
     }
     public void onAccuracyChangedToGood() {
         updateWaitingForAccuracyTextView(false);
+        if (SettingsFragment.mInitialLaunch) {
+            ((MainNavigationFragment.Delegate) getActivity()).navigateToFragmentWithName("Map");
+            SettingsFragment.mInitialLaunch = false;
+        }
     }
 }
