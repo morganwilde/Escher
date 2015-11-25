@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Escher</string>
     <string name="action_settings">Settings</string>
+    <!-- Settings Fragment -->
+    <string name="settings_fragment_waiting_for_accuracy_on">Waiting for accuracy to improve...</string>
+    <string name="settings_fragment_waiting_for_accuracy_off"></string>
+    <string name="settings_fragment_accuracy">accuracy = %1$d meters</string>
 </resources>

@@ -11,11 +11,24 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by morganwilde on 24/11/2015.
  */
 public class LocationMaster {
     public static final String TAG = "LocationMaster";
+
+    public interface OnAccuracyChangeListener {
+        public void onAccuracyChanged(float accuracy);
+        public void onAccuracyChangedToGood();
+    }
+
+    private List<OnAccuracyChangeListener> mOnAccuracyChangeListeners = new ArrayList<>();
+    public void addListenerForAccuracyChanges(OnAccuracyChangeListener listener) {
+        mOnAccuracyChangeListeners.add(listener);
+    }
 
     // Properties
     private boolean mShouldStartLocationUpdates = false;
@@ -68,6 +81,12 @@ public class LocationMaster {
             public void onLocationChanged(Location location) {
                 mHasStartedLocationUpdates = true;
                 mLastRecordedLocation = location;
+                for (OnAccuracyChangeListener accuracyChangeListener : mOnAccuracyChangeListeners) {
+                    accuracyChangeListener.onAccuracyChanged(location.getAccuracy());
+                    if (location.getAccuracy() <= 10) {
+                        accuracyChangeListener.onAccuracyChangedToGood();
+                    }
+                }
                 logLocation(location);
             }
         };

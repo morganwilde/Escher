@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * Created by morganwilde on 24/11/2015.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements LocationMaster.OnAccuracyChangeListener {
     public static final String TAG = "SettingsFragment";
     public static String LOCATION_TRACKING_TOGGLE_BUTTON_TEXT_ON = "Stop";
     public static String LOCATION_TRACKING_TOGGLE_BUTTON_TEXT_OFF = "Start";
@@ -22,12 +23,16 @@ public class SettingsFragment extends Fragment {
 
     // Properties
     private LocationMaster mLocationMaster;
+    // Views
     private Button mLocationTrackingToggleButton;
+    private TextView mWaitingForAccuracyTextView;
+    private TextView mAccuracyTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLocationMaster = LocationMaster.getLocationMaster(getActivity());
+        mLocationMaster.addListenerForAccuracyChanges(this);
     }
     @Nullable
     @Override
@@ -35,16 +40,25 @@ public class SettingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         mLocationTrackingToggleButton = (Button) view.findViewById(R.id.location_tracking_toggle_button);
+        mWaitingForAccuracyTextView = (TextView) view.findViewById(R.id.waiting_for_accuracy_text_view);
+        mAccuracyTextView = (TextView) view.findViewById(R.id.accuracy_text_view);
+
         mLocationTrackingToggleButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!mLocationMaster.willBecomeActive()) {
                     mLocationMaster.startLocationUpdates();
+                    updateWaitingForAccuracyTextView(true);
                 } else {
                     mLocationMaster.stopLocationUpdates();
+                    updateWaitingForAccuracyTextView(false);
+                    updateAccuracyTextView(-1);
                 }
                 updateTrackingToggleButton();
             }
         });
+
+        updateWaitingForAccuracyTextView(false);
+        updateAccuracyTextView(-1);
         updateTrackingToggleButton();
 
         return view;
@@ -72,5 +86,27 @@ public class SettingsFragment extends Fragment {
             mLocationTrackingToggleButton.setText(buttonText);
             mLocationTrackingToggleButton.setBackgroundTintList(new ColorStateList(states, buttonBackgroundTint));
         }
+    }
+    public void updateWaitingForAccuracyTextView(boolean visible) {
+        if (visible) {
+            mWaitingForAccuracyTextView.setText(R.string.settings_fragment_waiting_for_accuracy_on);
+        } else {
+            mWaitingForAccuracyTextView.setText(R.string.settings_fragment_waiting_for_accuracy_off);
+        }
+    }
+    public void updateAccuracyTextView(int accuracy) {
+        if (accuracy > 0) {
+            mAccuracyTextView.setText(String.format(getResources().getString(R.string.settings_fragment_accuracy), accuracy));
+        } else if (accuracy == -1) {
+            mAccuracyTextView.setText("");
+        }
+    }
+
+    // Listeners
+    public void onAccuracyChanged(float accuracy) {
+        updateAccuracyTextView(Math.round(accuracy));
+    }
+    public void onAccuracyChangedToGood() {
+        updateWaitingForAccuracyTextView(false);
     }
 }
