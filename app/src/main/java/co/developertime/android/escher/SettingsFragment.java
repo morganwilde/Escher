@@ -38,6 +38,7 @@ public class SettingsFragment extends Fragment implements LocationMaster.OnAccur
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
+        view.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.colorLightForeground));
 
         mLocationTrackingToggleButton = (Button) view.findViewById(R.id.location_tracking_toggle_button);
         mWaitingForAccuracyTextView = (TextView) view.findViewById(R.id.waiting_for_accuracy_text_view);

@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -17,30 +18,10 @@ public class MapCanvasView extends View {
     // Statics
     public static final String TAG = "MapCanvasView";
     private static final int BACKGROUND_ROUNDED_RECTANGLE_CORNER_RADIUS = 10;
+    private static final int BACKGROUND_ROUNDED_RECTANGLE_BORDER_WIDTH = 5;
 
     // Properties
     private float mScreenDensity;
-    private class Padding {
-        float mScreenDensity;
-        int mTop;
-        int mRight;
-        int mBottom;
-        int mLeft;
-        public Padding(float screenDensity, int top, int right, int bottom, int left) {
-            this.mScreenDensity = screenDensity;
-            this.mTop = top;
-            this.mRight = right;
-            this.mBottom = bottom;
-            this.mLeft = left;
-        }
-        public int top() {return mTop * (int) mScreenDensity;}
-        public int right() {return mRight * (int) mScreenDensity;}
-        public int bottom() {return mBottom * (int) mScreenDensity;}
-        public int left() {return mLeft * (int) mScreenDensity;}
-        public int horizontal() {return left() + right();}
-        public int vertical() {return top() + bottom();}
-    }
-    private Padding mPadding;
     private Rect mCanvasBounds;
 
     // Drawables
@@ -50,14 +31,11 @@ public class MapCanvasView extends View {
     public MapCanvasView(Context context) {
         super(context);
         mScreenDensity = context.getResources().getDisplayMetrics().density;
-        mPadding = new Padding(mScreenDensity, 10, 10, 10, 10);
-        setBackgroundColor(0xffecf0f1); // Clouds
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.i(TAG, "onDraw");
         mBackgroundShape.draw(canvas);
     }
 
@@ -65,34 +43,47 @@ public class MapCanvasView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mCanvasBounds = new Rect(0, 0, w, h);
-        Log.i(TAG, "" + mCanvasBounds);
         createBackgroundShape();
     }
 
     // Drawing
     private void createBackgroundShape() {
         // Size
-        int x = mPadding.left();
-        int y = mPadding.top();
-        int width = mCanvasBounds.width() - mPadding.horizontal();
-        int height = mCanvasBounds.height() - mPadding.vertical();
+        int x = 0;
+        int y = 0;
+        int width = mCanvasBounds.width();
+        int height = mCanvasBounds.height();
         // Shape
         if (mBackgroundShape == null) {
-            // Corners
             float radius = BACKGROUND_ROUNDED_RECTANGLE_CORNER_RADIUS;
             float topLeftRadius = radius * mScreenDensity;
             float topRightRadius = radius * mScreenDensity;
             float bottomLeftRadius = radius * mScreenDensity;
             float bottomRightRadius = radius * mScreenDensity;
-            float[] outerRadii = {
+            // Inner Corners
+            float[] innerRadii = {
                     topLeftRadius, topLeftRadius,
                     topRightRadius, topRightRadius,
                     bottomRightRadius, bottomRightRadius,
                     bottomLeftRadius, bottomLeftRadius
             };
+            // Inset rectangle
+            RectF insetRectangle = new RectF(
+                    BACKGROUND_ROUNDED_RECTANGLE_BORDER_WIDTH * mScreenDensity,
+                    BACKGROUND_ROUNDED_RECTANGLE_BORDER_WIDTH * mScreenDensity,
+                    BACKGROUND_ROUNDED_RECTANGLE_BORDER_WIDTH * mScreenDensity,
+                    BACKGROUND_ROUNDED_RECTANGLE_BORDER_WIDTH * mScreenDensity
+            );
+            // Outer Corners
+            float[] outerRadii = {
+                    0, 0,
+                    0, 0,
+                    0, 0,
+                    0, 0
+            };
 
-            mBackgroundShape = new ShapeDrawable(new RoundRectShape(outerRadii, null, null));
-            mBackgroundShape.getPaint().setColor(0xff95a5a6); // Concrete
+            mBackgroundShape = new ShapeDrawable(new RoundRectShape(outerRadii, insetRectangle, innerRadii));
+            mBackgroundShape.getPaint().setColor(ContextCompat.getColor(getContext(), R.color.colorLightForeground));
         }
         mBackgroundShape.setBounds(x, y, x + width, y + height);
     }
